@@ -36,6 +36,12 @@ namespace Calc.Pages
             }
         }
 
+        protected void SetFirstValue(string value )
+        {
+            Console.WriteLine( value );
+            FirstNum = value;
+        }
+
     }
 
 }

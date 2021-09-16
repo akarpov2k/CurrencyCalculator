@@ -2,8 +2,8 @@
 
 <h3>Calculate</h3>
 
-<input @bind="FirstNum" type="number" step="any" min="0" onkeypress="checkForZero(this)"/>
-<input @bind="SecondNum" type="number" step="any" min="0" onkeypress="checkForZero(this)"/>
+<input id="firstNum" type="number" step="any" min="0" oninput="checkForZero(this)" />
+<input id="secondNum" type="number" step="any" min="0" oninput="checkForZero(this)"/>
 
 @code {
 
