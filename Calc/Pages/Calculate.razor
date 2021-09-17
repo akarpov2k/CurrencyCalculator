@@ -1,10 +1,42 @@
 ﻿@page "/calculate"
+@inject HttpClient Http
 
 <h3>Calculate</h3>
+<table>
+    <tr>
+        <td>
+            <select class="custom-select" style="width:150px" @bind="firstCurrensy">
+                @if( CurrencyNames != null )
+                {
+                    @foreach( var item in CurrencyNames )
+                    {
+                        <option value="@item" style="background-image:url(i/icon-512.png)">@item</option>
+                    }
+                }
+            </select><br />
+            <input id="firstNum" type="number" step="any" min="0" oninput="checkForZero(this)" />
+        </td>
+        <td>
+            <select class="custom-select" style="width:150px" @bind="secondCurrensy">
+                @if( CurrencyNames != null )
+                {
+                    @foreach( var item in CurrencyNames )
+                    {
+                        <option value="@item">@item</option>
+                    }
+                }
+            </select><br />
+            <input id="secondNum" type="number" step="any" min="0" oninput="checkForZero(this)" />
+        </td>
 
-<input id="firstNum" type="number" step="any" min="0" oninput="checkForZero(this)" />
-<input id="secondNum" type="number" step="any" min="0" oninput="checkForZero(this)"/>
+    </tr>
+</table>
+<br />
+<button @onclick="LoadCurrencyRate" value="Загрузить"></button>
 
 @code {
-
+    protected override async Task OnInitializedAsync()
+    {
+        CurrencyNames = await Http.GetFromJsonAsync<string[]>( "sample-data/currensy-names.json" );
+    }
 }
