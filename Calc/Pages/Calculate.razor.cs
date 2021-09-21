@@ -1,21 +1,41 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Calc.Pages
 {
     public partial class Calculate
     {
-        protected string[] CurrencyNames;
-
-        protected string firstCurrensy;
-        protected string secondCurrensy;
-        protected void LoadCurrencyRate()
+        public struct Currency
         {
-            API_Obj obj = new API_Obj();
+            public string Name { get; set; }
+            public double Value { get; set; }
+        }
+        protected List<Currency> Currencies;
 
-            if( Rates.TryImport(out obj ) )
+        protected double firstCurrency;
+        protected double secondCurrency;
+        protected bool IsLoading = true;
+
+        protected async Task LoadCurrency()
+        {
+            var obj = await Rates.Import();
+            GetCurrencyField( obj );
+            Console.WriteLine( Currencies.Count );
+        }
+
+        private void GetCurrencyField(API_Obj obj )
+        {
+            if (Currencies == null )
             {
-                Console.WriteLine( obj.result );
+                Currencies = new List<Currency>();
+            }
+            var props = typeof( ConversionRate ).GetProperties();
+            foreach( var prop in props )
+            {
+                Currencies.Add( new Currency { Name = prop.Name, Value = (double)prop.GetValue( obj.conversion_rates, null ) } );
             }
         }
     }
@@ -24,27 +44,25 @@ namespace Calc.Pages
 
     class Rates
     {
-        public static bool TryImport(out API_Obj obj)
+        public static async Task<API_Obj> Import()
         {
+            String URLString = "https://v6.exchangerate-api.com/v6/d98708e6592be8b6fbb4ae4e/latest/USD";
             try
             {
-                String URLString = "https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD";
-                using( var webClient = new System.Net.WebClient() )
+                using( var webClient = new HttpClient() )
                 {
-                    var json = webClient.DownloadString( URLString );
-                    Console.WriteLine( json );
-                    obj = (API_Obj)JsonConvert.DeserializeObject( json );
-                    return true;
+                    var json = await webClient.GetStringAsync( URLString );
+                    var obj = JsonConvert.DeserializeObject<API_Obj>( json );                   
+                    return obj;
                 }
             }
-            catch( Exception )
+            catch(Exception e )
             {
-                obj = null;
-                return false;
+                Console.WriteLine( e.Message );
+                return null;
             }
         }
     }
-
 
     public class API_Obj
     {

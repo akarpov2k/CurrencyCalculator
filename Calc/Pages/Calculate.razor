@@ -1,42 +1,70 @@
 ﻿@page "/calculate"
 @inject HttpClient Http
 
-<h3>Calculate</h3>
-<table>
-    <tr>
-        <td>
-            <select class="custom-select" style="width:150px" @bind="firstCurrensy">
-                @if( CurrencyNames != null )
-                {
-                    @foreach( var item in CurrencyNames )
+@if( IsLoading )
+{
+    <p>
+    Загрузка...
+    </p>
+}
+else
+{
+    <h3>Calculate</h3>
+    <table>
+        <tr>
+            <td>
+                <select class="custom-select" style="width:150px" @bind="firstCurrency">
+                    @if( Currencies != null )
                     {
-                        <option value="@item" style="background-image:url(i/icon-512.png)">@item</option>
+                        @foreach( var item in Currencies )
+                        {
+                            if( item.Name == "USD" )
+                            {
+                                <option value="@item.Value" selected="selected">@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value" style="background-image:url(i/icon-512.png)">@item.Name</option>
+                            }
+                        }
                     }
-                }
-            </select><br />
-            <input id="firstNum" type="number" step="any" min="0" oninput="checkForZero(this)" />
-        </td>
-        <td>
-            <select class="custom-select" style="width:150px" @bind="secondCurrensy">
-                @if( CurrencyNames != null )
-                {
-                    @foreach( var item in CurrencyNames )
+                </select><br />
+                <input id="firstNum" type="number" step="any" min="0" oninput="checkForZero(this)" />
+            </td>
+            <td>
+                <select class="custom-select" style="width:150px" @bind="secondCurrency">
+                    @if( Currencies != null )
                     {
-                        <option value="@item">@item</option>
+                        @foreach( var item in Currencies )
+                        {
+                            if( item.Name == "RUB" )
+                            {
+                                <option value="@item.Value" selected="selected">@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value" style="background-image:url(i/icon-512.png)">@item.Name</option>
+                            }
+                        }
                     }
-                }
-            </select><br />
-            <input id="secondNum" type="number" step="any" min="0" oninput="checkForZero(this)" />
-        </td>
+                </select><br />
+                <input id="secondNum" type="number" step="any" min="0" oninput="checkForZero(this)" />
+            </td>
 
-    </tr>
-</table>
-<br />
-<button @onclick="LoadCurrencyRate" value="Загрузить"></button>
+        </tr>
+    </table>
+    <br />
+    <input id="firstList" type="number" @bind="firstCurrency" />
+    <input id="secondList" type="number" @bind="secondCurrency" />
+    <input type="number" step="any" />
+}
 
 @code {
     protected override async Task OnInitializedAsync()
     {
-        CurrencyNames = await Http.GetFromJsonAsync<string[]>( "sample-data/currensy-names.json" );
+        await LoadCurrency();
+        firstCurrency = Currencies.Where( item => item.Name == "USD" ).Select( item => item.Value ).FirstOrDefault();
+        secondCurrency = Currencies.Where( item => item.Name == "RUB" ).Select( item => item.Value ).FirstOrDefault();
+        IsLoading = false;
     }
 }
