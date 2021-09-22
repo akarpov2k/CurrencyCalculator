@@ -22,15 +22,4 @@ jobs:
       # генерируем статические файлы
     - name: Publish .NET Core Project
       run: dotnet publish Calc.sln -c Release --output release --nologo
-      
-    - name: Uploading files to gh-pages branch
-      uses: JamesIves/github-pages-deploy-action@4.1.4
-      with:
-        branch: gh-pages
-        folder: release/wwwroot
-    
-    - name: Change base-tag in index.html from / to BlazorGitHubPagesDemo
-      run: sed -i 's/<base href="\/" \/>/<base href="\/CurrencyCalculator\/" \/>/g' release/wwwroot/index.html
-         # отключаем jekyll
-    - name: Add .nojekyll file
-      run: touch release/wwwroot/.nojekyll
+  
