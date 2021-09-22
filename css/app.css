@@ -48,3 +48,24 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.custom-select {
+    padding: 0.09rem 1.10rem 0.07rem 1.25rem;
+    height: 30px;
+}
+
+.currency_input {
+    height: 30px;
+}
+
+    .currency_input:visited {
+        border: 1px solid black;
+    }
+
+    .currency_input:hover {
+        border: 2.3px solid black;
+    }
+
+table.currency_table tr {
+    height: 42px;
+}
