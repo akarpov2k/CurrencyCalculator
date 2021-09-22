@@ -15,20 +15,60 @@ namespace Calc.Pages
         }
         protected List<Currency> Currencies;
 
-        protected double firstCurrency;
-        protected double secondCurrency;
-        protected bool IsLoading = true;
+        private double selectedFirstRate;
+        private double selectedSecondRate;
+        private double firstValue = 0;
+        private double secondValue = 0;
 
+        protected double FirstCurrency
+        {
+            get
+            {
+                return selectedFirstRate;
+            }
+            set
+            {
+                selectedFirstRate = value;
+                SecondValue = Math.Round( FirstValue * selectedSecondRate / selectedFirstRate, 3 );
+            }
+        }
+        protected double SecondCurrency
+        {
+            get
+            {
+                return selectedSecondRate;
+            }
+            set
+            {
+                selectedSecondRate = value;
+                FirstValue = Math.Round( SecondValue * selectedFirstRate / selectedSecondRate, 3 );
+            }
+        }
+        protected bool IsLoading = true;
+        protected string LastTimeUpdate { get; set; }
+        protected double FirstValue { get { return firstValue; } set {
+                firstValue = value; 
+                secondValue = Math.Round( firstValue * selectedSecondRate / selectedFirstRate,3);
+            } 
+        }
+        protected double SecondValue
+        {
+            get { return secondValue; }
+            set {
+                secondValue = value;
+                firstValue = Math.Round( secondValue * selectedFirstRate / selectedSecondRate,3);
+            }
+        }
         protected async Task LoadCurrency()
         {
             var obj = await Rates.Import();
             GetCurrencyField( obj );
-            Console.WriteLine( Currencies.Count );
+            LastTimeUpdate = DateTime.Now.ToString( "dd.MM.yyyy dddd" );
         }
 
-        private void GetCurrencyField(API_Obj obj )
+        private void GetCurrencyField( API_Obj obj )
         {
-            if (Currencies == null )
+            if( Currencies == null )
             {
                 Currencies = new List<Currency>();
             }
@@ -52,11 +92,11 @@ namespace Calc.Pages
                 using( var webClient = new HttpClient() )
                 {
                     var json = await webClient.GetStringAsync( URLString );
-                    var obj = JsonConvert.DeserializeObject<API_Obj>( json );                   
+                    var obj = JsonConvert.DeserializeObject<API_Obj>( json );
                     return obj;
                 }
             }
-            catch(Exception e )
+            catch( Exception e )
             {
                 Console.WriteLine( e.Message );
                 return null;
@@ -70,7 +110,7 @@ namespace Calc.Pages
         public string documentation { get; set; }
         public string terms_of_use { get; set; }
         public string time_zone { get; set; }
-        public string time_last_update { get; set; }
+        public string time_last_update_utc { get; set; }
         public string time_next_update { get; set; }
         public ConversionRate conversion_rates { get; set; }
     }
