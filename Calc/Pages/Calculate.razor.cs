@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Calc.Pages
 {
@@ -12,14 +13,19 @@ namespace Calc.Pages
         {
             public string Name { get; set; }
             public double Value { get; set; }
+            public string ImagePath { get; set; }
         }
-        protected List<Currency> Currencies;
+        #region private fields
 
         private double selectedFirstRate;
         private double selectedSecondRate;
         private double firstValue = 0;
         private double secondValue = 0;
+        private Timer timer;
+        #endregion
 
+        #region protected properties
+        protected List<Currency> Currencies;
         protected double FirstCurrency
         {
             get
@@ -29,7 +35,7 @@ namespace Calc.Pages
             set
             {
                 selectedFirstRate = value;
-                SecondValue = Math.Round( FirstValue * selectedSecondRate / selectedFirstRate, 3 );
+                SecondValue = Math.Round( FirstValue * selectedSecondRate / selectedFirstRate, Accuracy );
             }
         }
         protected double SecondCurrency
@@ -41,14 +47,14 @@ namespace Calc.Pages
             set
             {
                 selectedSecondRate = value;
-                FirstValue = Math.Round( SecondValue * selectedFirstRate / selectedSecondRate, 3 );
+                FirstValue = Math.Round( SecondValue * selectedFirstRate / selectedSecondRate, Accuracy );
             }
         }
         protected bool IsLoading = true;
         protected string LastTimeUpdate { get; set; }
         protected double FirstValue { get { return firstValue; } set {
                 firstValue = value; 
-                secondValue = Math.Round( firstValue * selectedSecondRate / selectedFirstRate,3);
+                secondValue = Math.Round( firstValue * selectedSecondRate / selectedFirstRate, Accuracy );
             } 
         }
         protected double SecondValue
@@ -56,13 +62,21 @@ namespace Calc.Pages
             get { return secondValue; }
             set {
                 secondValue = value;
-                firstValue = Math.Round( secondValue * selectedFirstRate / selectedSecondRate,3);
+                firstValue = Math.Round( secondValue * selectedFirstRate / selectedSecondRate,Accuracy);
             }
         }
+
+        protected int Accuracy { get; set; } = 2;
+
+        protected TimeSpan TimeLeft { get; set; }
+
+        #endregion
+
+        #region methods
         protected async Task LoadCurrency()
         {
             var obj = await Rates.Import();
-            GetCurrencyField( obj );
+            GetCurrencyField( obj );            
             LastTimeUpdate = DateTime.Now.ToString( "dd.MM.yyyy dddd" );
         }
 
@@ -75,13 +89,46 @@ namespace Calc.Pages
             var props = typeof( ConversionRate ).GetProperties();
             foreach( var prop in props )
             {
-                Currencies.Add( new Currency { Name = prop.Name, Value = (double)prop.GetValue( obj.conversion_rates, null ) } );
+                Currencies.Add( new Currency
+                {
+                    Name = prop.Name,
+                    Value = (double)prop.GetValue( obj.conversion_rates, null ),
+                    ImagePath = "flags/" + prop.Name + ".png"
+                } );
             }
         }
+
+        private void RefreshTime()
+        {
+            TimeLeft = DateTime.Today.AddDays( 1 ).AddSeconds(2) - DateTime.Now;
+        }
+
+        private void DecrementTime( Object source, ElapsedEventArgs e )
+        {
+            if (TimeLeft.TotalSeconds > -1 )
+            {
+                TimeLeft = TimeLeft - new TimeSpan(0,0,1);
+            }
+            else
+            {
+                RefreshTime();
+            }
+            InvokeAsync( StateHasChanged );
+        }
+
+        protected void SetTimer()
+        {
+            timer = new Timer( 1000 );
+            timer.Elapsed += DecrementTime;
+            RefreshTime();
+            timer.Enabled = true;
+        }
+
+        #endregion
     }
 
 
-
+    #region rates api
     class Rates
     {
         public static async Task<API_Obj> Import()
@@ -169,4 +216,5 @@ namespace Calc.Pages
         public double UYU { get; set; }
         public double ZAR { get; set; }
     }
+    #endregion
 }

@@ -11,7 +11,15 @@
 else
 {
     <h3>Calculate</h3>
-    <table>
+    <table class="currency_table">
+        <tr>
+            <td style="display:inline-block">
+                <label for="idAccuracy" style="display:block">
+                    Укажите точность перевода (число знаков после запятой)
+                </label>
+                <input id="idAccuracy" type="number" style="width:110px" step="1" min="0" max="6" @bind="Accuracy" onkeypress="return false;" />
+            </td>
+        </tr>
         <tr>
             <td>
                 <select class="custom-select" style="width:150px" @bind="FirstCurrency">
@@ -56,7 +64,7 @@ else
 
         </tr>
     </table>
-    <label style="color:skyblue">Данные по курсам валют получены на @LastTimeUpdate</label>
+    <label style="color:skyblue">Данные по курсам валют получены на @LastTimeUpdate. До обновления осталось @TimeLeft.ToString( @"hh\:mm\:ss")</label>
     <br />
 }
 
@@ -68,6 +76,7 @@ else
         var rubls = Currencies.FirstOrDefault( item => item.Name == "RUB" );
         SecondCurrency = rubls.Value;
         FirstValue = 1;
+        SetTimer();
         IsLoading = false;
     }
 }
