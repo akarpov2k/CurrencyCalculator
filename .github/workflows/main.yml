@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 # Запускаем магию только на пуши в main
 on:
   push:
-    branches: main
+    branches: master
     
 jobs:
   deploy-to-github-pages:
@@ -26,8 +26,8 @@ jobs:
     - name: Uploading files to gh-pages branch
       uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
-         branch: gh-pages
-         folder: release/wwwroot
+        branch: gh-pages
+        folder: release/wwwroot
          # отключаем jekyll
     - name: Add .nojekyll file
       run: touch release/wwwroot/.nojekyll
