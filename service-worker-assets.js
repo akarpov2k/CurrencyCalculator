@@ -189,7 +189,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-ZTo2e7UTQMW5W69fnxiaxiuFXrfUYJLtzup5iP+YMto=",
+      "hash": "sha256-hcLOuG2EXhiJv7fwiTwXYuDYGK5v5e6OPyx8SeHTmQE=",
       "url": "_framework\/Calc.dll"
     },
     {
@@ -377,7 +377,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-7x9xWlROhdk3QSZqUfLAEfLsyX583f1WNwByLVMXDdc=",
+      "hash": "sha256-\/Zfo9xGkJGVYoh+TbLCGxehX5\/a2vWbgYNAX9jhmUOU=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -385,5 +385,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "NTlrXMCU"
+  "version": "Alc45eF6"
 };
