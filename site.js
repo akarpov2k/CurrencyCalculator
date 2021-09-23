@@ -10,3 +10,11 @@ function TriggerOnChange(input) {
     $(input)[0].blur();
     $(input)[0].focus();
 }
+
+function SwitchMode() {
+    var body = document.body;
+    body.classList.toggle("dark-mode");
+    for (var i = 0; i < body.children.length; i++) {
+        body.children[i].classList.toggle("dark-mode");
+    }
+}

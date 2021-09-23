@@ -1,7 +1,7 @@
 ﻿self.assetsManifest = {
   "assets": [
     {
-      "hash": "sha256-7dsX7AWJzvlxdBYU90TITUxM6evH2sclJsKF6l5sVyw=",
+      "hash": "sha256-qP2pRhboTAVfa90Q8SzrOdGQ4SY3dbCHRCneXMFZjsk=",
       "url": "css\/app.css"
     },
     {
@@ -85,7 +85,7 @@
       "url": "sample-data\/weather.json"
     },
     {
-      "hash": "sha256-+aQkkCWaVA5D5pVPAVHXf7G6pzM1cP1Wk9ylJMZJc2E=",
+      "hash": "sha256-oKLOjwupHA\/d4adEOaJbjRmzes56DkmNrymteeUVGdw=",
       "url": "site.js"
     },
     {
@@ -189,7 +189,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-Yn2eRY2r7zbYE1RsQBgu3QT6OcA8JCBZ1rOd5xdh06I=",
+      "hash": "sha256-ZTo2e7UTQMW5W69fnxiaxiuFXrfUYJLtzup5iP+YMto=",
       "url": "_framework\/Calc.dll"
     },
     {
@@ -373,11 +373,11 @@
       "url": "_framework\/netstandard.dll"
     },
     {
-      "hash": "sha256-r6Vs7oAsb8RDHVBjBZbIERhQgr6GonOD4EEZ6r0Z054=",
+      "hash": "sha256-y383CyLr2n0pH2a82Dzb0OGfjuHMzj51TjlvB1\/yhCM=",
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-FzAh\/7mBLj4bVIop1h1MO9z9E2BDth8\/jIuruk7pPSw=",
+      "hash": "sha256-7x9xWlROhdk3QSZqUfLAEfLsyX583f1WNwByLVMXDdc=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -385,5 +385,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "0PfeYAaB"
+  "version": "NTlrXMCU"
 };
