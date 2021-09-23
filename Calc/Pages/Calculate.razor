@@ -10,71 +10,81 @@
 }
 else
 {
-    <h3>Calculate</h3>
-    <table class="currency_table">
-        <tr>
-            <td style="display:inline-block">
-                <label for="idAccuracy" style="display:block">
-                    Укажите точность перевода (число знаков после запятой)
-                </label>
-                <input id="idAccuracy" type="number" style="width:110px" step="1" min="0" max="6" @bind="Accuracy" onkeypress="return false;" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <select class="custom-select" style="width:150px" @bind="FirstCurrency">
-                    @if( Currencies != null )
-                    {
-                        @foreach( var item in Currencies )
-                        {
-                            if( item.Name == "USD" )
+<body>
+    <h3 style="text-align:center">Calculate</h3>
+    <div class="row" style="height:100%">
+        <div class="card-body col-10">
+            <table class="currency_table">
+                <tr>
+                    <td style="display:inline-block">
+                        <label for="idAccuracy" style="display:block">
+                            Укажите точность перевода (число знаков после запятой, максимум 6)
+                        </label>
+                        <input id="idAccuracy" type="number" style="width:110px" step="1" min="0" max="6" @bind="Accuracy" onkeypress="return false;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="@GetImgPath(FirstCurrencyName)" alt="@FirstCurrencyName" />
+                        <select class="custom-select" style="width:150px" @bind="FirstCurrencyName">
+                            @if( Currencies != null )
                             {
-                                <option value="@item.Value" selected="selected">@item.Name</option>
+                                @foreach( var item in Currencies )
+                                {
+                                    if( item.Name == "USD" )
+                                    {
+                                        <option value="@item.Name" selected="selected">@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Name">@item.Name</option>
+                                    }
+                                }
                             }
-                            else
+                        </select>&nbsp;&nbsp;
+                        <input id="firstNum" placeholder="0.00" type="number" step="any" min="0" onkeypress="checkForDotAndZero(event,this)" oninput="TriggerOnChange(this)" @bind="FirstValue" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="@GetImgPath(SecondCurrencyName)" alt="@SecondCurrencyName" />
+                        <select class="custom-select" style="width:150px" @bind="SecondCurrencyName">
+                            @if( Currencies != null )
                             {
-                                <option value="@item.Value" >@item.Name</option>
+                                @foreach( var item in Currencies )
+                                {
+                                    if( item.Name == "RUB" )
+                                    {
+                                        <option value="@item.Name" selected="selected">@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Name">@item.Name</option>
+                                    }
+                                }
                             }
-                        }
-                    }
-                </select>&nbsp;&nbsp;
-                <input id="firstNum" placeholder="0.00" type="number" step="any" min="0" onkeypress="checkForDotAndZero(event,this)" oninput="TriggerOnChange(this)" @bind="FirstValue" />
-            </td>
-            </tr>
-        <tr>
-            <td>
-                <select class="custom-select" style="width:150px" @bind="SecondCurrency">
-                    @if( Currencies != null )
-                    {
-                        @foreach( var item in Currencies )
-                        {
-                            if( item.Name == "RUB" )
-                            {
-                                <option value="@item.Value" selected="selected">@item.Name</option>
-                            }
-                            else
-                            {
-                                <option value="@item.Value" >@item.Name</option>
-                            }
-                        }
-                    }
-                </select>&nbsp;&nbsp;
-                <input id="secondNum" placeholder="0.00" type="number" step="any" min="0" onkeypress="checkForDotAndZero(event,this)" oninput="TriggerOnChange(this)"  @bind="SecondValue" />
-            </td>
+                        </select>&nbsp;&nbsp;
+                        <input id="secondNum" placeholder="0.00" type="number" step="any" min="0" onkeypress="checkForDotAndZero(event,this)" oninput="TriggerOnChange(this)" @bind="SecondValue" />
+                    </td>
 
-        </tr>
-    </table>
-    <label style="color:skyblue">Данные по курсам валют получены на @LastTimeUpdate. До обновления осталось @TimeLeft.ToString( @"hh\:mm\:ss")</label>
-    <br />
+                </tr>
+            </table>
+            <label style="color:skyblue">Данные по курсам валют получены на @LastTimeUpdate. До обновления осталось @TimeLeft.ToString( @"hh\:mm\:ss" ) (UTC)</label>
+            <br />
+        </div>
+        <div class="col-2" style="text-align:center; float:none">
+            Здесь может быть ваша реклама
+        </div>
+    </div>
+</body>
 }
 
 @code {
     protected override async Task OnInitializedAsync()
     {
         await LoadCurrency();
-        FirstCurrency = Currencies.Where( item => item.Name == "USD" ).Select( item => item.Value ).FirstOrDefault();
-        var rubls = Currencies.FirstOrDefault( item => item.Name == "RUB" );
-        SecondCurrency = rubls.Value;
+        FirstCurrencyName = "USD";
+        SecondCurrencyName = "RUB";
         FirstValue = 1;
         SetTimer();
         IsLoading = false;

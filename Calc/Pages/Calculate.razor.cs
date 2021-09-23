@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
@@ -21,6 +23,9 @@ namespace Calc.Pages
         private double selectedSecondRate;
         private double firstValue = 0;
         private double secondValue = 0;
+        private string firstCurrName;
+        private string secondCurrName;
+        private int accuracy = 2;
         private Timer timer;
         #endregion
 
@@ -66,9 +71,25 @@ namespace Calc.Pages
             }
         }
 
-        protected int Accuracy { get; set; } = 2;
+        protected int Accuracy { get { return accuracy; } set {
+                accuracy = value;
+                FirstValue = FirstValue;
+            } }
 
         protected TimeSpan TimeLeft { get; set; }
+
+        protected string FirstCurrencyName { get { return firstCurrName; } set
+            {
+                firstCurrName = value;
+                selectedFirstRate = Currencies.FirstOrDefault( item => item.Name == value ).Value;
+            }
+        }
+        protected string SecondCurrencyName { get { return secondCurrName; }
+            set {
+                secondCurrName = value;
+                selectedSecondRate = Currencies.FirstOrDefault( item => item.Name == value ).Value; 
+            } }
+       
 
         #endregion
 
@@ -100,7 +121,7 @@ namespace Calc.Pages
 
         private void RefreshTime()
         {
-            TimeLeft = DateTime.Today.AddDays( 1 ).AddSeconds(2) - DateTime.Now;
+            TimeLeft = DateTime.UtcNow.Date.AddDays( 1 ).AddSeconds(2) - DateTime.UtcNow;
         }
 
         private void DecrementTime( Object source, ElapsedEventArgs e )
@@ -124,6 +145,11 @@ namespace Calc.Pages
             timer.Enabled = true;
         }
 
+        protected string GetImgPath(string name )
+        {
+            return Currencies.FirstOrDefault( item => item.Name == name ).ImagePath;
+        }
+
         #endregion
     }
 
@@ -142,6 +168,7 @@ namespace Calc.Pages
                     var obj = JsonConvert.DeserializeObject<API_Obj>( json );
                     return obj;
                 }
+
             }
             catch( Exception e )
             {

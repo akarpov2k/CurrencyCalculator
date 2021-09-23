@@ -69,3 +69,13 @@ a, .btn-link {
 table.currency_table tr {
     height: 42px;
 }
+
+body{
+    background-color:white;
+    color:black;    
+}
+
+.dark-mode{
+    background-color:black;
+    color: white;
+}
