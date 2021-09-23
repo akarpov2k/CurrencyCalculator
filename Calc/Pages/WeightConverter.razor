@@ -1,0 +1,21 @@
+﻿@if( show )
+{
+<div>
+    <h4>Конвертер единиц измерения масс</h4>
+</div>
+}
+
+@code{
+    public bool show = false;
+
+    public void Show()
+    {
+        show = true;
+        InvokeAsync( StateHasChanged );
+    }
+
+    public void Close()
+    {
+        show = false;
+    }
+}

@@ -1,0 +1,46 @@
+﻿<div class="modal @modalClass" role="dialog" tabindex="-1" style="display: @modalDisplay; overflow-y:auto">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Header</h3>
+            </div>
+            <div class="modal-body">
+                Это модальный диалог
+            </div>
+            <div class="modal-footer">
+                @Footer
+            </div>
+        </div>
+    </div>
+</div>
+
+@if( showBackdrop )
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+@code{
+    [Parameter]
+    public RenderFragment Footer { get; set; }
+
+
+    private string modalDisplay = "none";
+    private string modalClass = "";
+    private bool showBackdrop = false;
+
+    public void Show()
+    {
+        modalDisplay = "block";
+        modalClass = "show";
+        showBackdrop = true;
+    }
+
+    public void Close()
+    {
+        modalClass = "";
+        modalDisplay = "none";
+        showBackdrop = false;
+    }
+
+}
