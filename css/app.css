@@ -69,3 +69,19 @@ a, .btn-link {
 table.currency_table tr {
     height: 42px;
 }
+
+
+#game_field {
+    width: 800px;
+    height: 1000px;
+    margin-right: 25%; /* Отступ справа */
+    margin-left: 25%;
+}
+
+#game_field, th, td{
+    border: 1px solid;
+}
+
+th, td{
+    text-align: center;
+}
