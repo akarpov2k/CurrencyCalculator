@@ -3,14 +3,18 @@
 @inject IJSRuntime JS
 
 <h3>Game</h3>
-@if( Field != null )
+@if( GameField != null )
 {
+    if( congrat )
+    {
+                    <h4>Поздравляем! Вы выиграли</h4>
+    }
     <table id="game_field">
         <tbody>
-            @for( int i = 0; i < Field.Field.Length; i++ )
+            @for( int i = 0; i < GameField.Field.Length; i++ )
             {
                 <tr>
-                    @for( int j = 0; j < Field.Field[i].Length; j++ )
+                    @for( int j = 0; j < GameField.Field[i].Length; j++ )
                     {
                         var point = (i, j);
                         var id = $"cell_{i}_{j}";
@@ -30,12 +34,55 @@ else
 }
 
 @code {
+    private byte ClickCount { get; set; }
+    private Coord FirstCard { get; set; }
+    private Coord SecondCard { get; set; }
+
+    private bool congrat = false;
+
 
     protected async Task ShowTd( int x, int y )
     {
-        Console.WriteLine( $"{x} : {y}" );
-        Console.WriteLine( Field.Field[x][y].Value );
-        await JS.InvokeVoidAsync( "showSelectCell", new object[] { $"cell_{x}_{y}", Field.Field[x][y].Value } );
+        var temp = new Coord { X = x, Y = y };
+        if( GameField.Field[temp.X][temp.Y].IsOpen ) return;
+        if( ClickCount == 0 )
+        {
+            FirstCard = temp;
+            ClickCount++;
+            await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, "yellow", false } );
+            GameField.Field[FirstCard.X][FirstCard.Y].IsOpen = true;
+        }
+        else if( ClickCount == 1 )
+        {
+            SecondCard = temp;
+            Console.WriteLine( GameField.Field[FirstCard.X][FirstCard.Y].Value );
+            Console.WriteLine( GameField.Field[SecondCard.X][SecondCard.Y].Value );
+            await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, "yellow", false, true } );
+            if( GameField.Field[FirstCard.X][FirstCard.Y].Value == GameField.Field[SecondCard.X][SecondCard.Y].Value )
+            {
+                await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, "green", false } );
+                await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, "green", false } );
+                GameField.Field[FirstCard.X][FirstCard.Y].IsOpen = true;
+                GameField.Field[SecondCard.X][SecondCard.Y].IsOpen = true;
+                if( GameField.IsWin() )
+                {
+                    congrat = true;
+                }
+            }
+            else
+            {                
+                await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, "white", true } );
+                await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, "white", true } );
+                GameField.Field[FirstCard.X][FirstCard.Y].IsOpen = false;
+                GameField.Field[SecondCard.X][SecondCard.Y].IsOpen = false;
+            }
+            ClickCount = 0;
+        }
+    }
+
+    protected void Delayy()
+    {
+        Thread.Sleep( 1500 );
     }
 
     protected override Task OnInitializedAsync()

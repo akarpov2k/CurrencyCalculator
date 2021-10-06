@@ -10,9 +10,32 @@ namespace Calc.Pages
     {
         protected void Init()
         {
-            Field = GameCellGenerator.Generate( 16 );
+            GameField = GameCellGenerator.Generate( 16 );
         }
-        protected GameField Field { get; set; }
+        protected GameField GameField { get; set; }
        
+    }
+
+    public struct Coord
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public override bool Equals( object obj )
+        {
+            return obj is Coord coord &&
+                   X == coord.X &&
+                   Y == coord.Y;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine( X, Y );
+        }
+
+        public string GetCellPos()
+        {
+            return $"cell_{X}_{Y}";
+        }
     }
 }
