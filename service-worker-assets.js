@@ -85,7 +85,7 @@
       "url": "sample-data\/weather.json"
     },
     {
-      "hash": "sha256-VORlf8XUcgi9md3GHeyyZYeo6ccNr+zS\/Mf4gC9P2LE=",
+      "hash": "sha256-bHj0Mln5HSfXsBWfwBmXLEaBuQ7dvsJUrg+O8kgpimw=",
       "url": "site.js"
     },
     {
@@ -189,7 +189,7 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-S348agtmUDIOaPbUipiHPs1BtXwVdXqPBjoTfiAvrxs=",
+      "hash": "sha256-9jW51fNtu4ffKH8tma2qdg4hjNvjNV9aS8MYZtMK5DE=",
       "url": "_framework\/Calc.dll"
     },
     {
@@ -333,7 +333,7 @@
       "url": "_framework\/System.Runtime.Serialization.Primitives.dll"
     },
     {
-      "hash": "sha256-d5Lg7hl3gNHlx5T7TwhRonYDTTU12Pj5jFFuIbuFPw8=",
+      "hash": "sha256-HFgAjd\/CLK2EvxMih6NMSWcmlNt3znDzyMIBxTUfi+o=",
       "url": "_framework\/System.Runtime.dll"
     },
     {
@@ -357,6 +357,10 @@
       "url": "_framework\/System.Threading.Tasks.dll"
     },
     {
+      "hash": "sha256-tjyzsXrK7W7CbJmFX8t8+cFxSQkpQAGMJaMsIS0VaFY=",
+      "url": "_framework\/System.Threading.Thread.dll"
+    },
+    {
       "hash": "sha256-2AldYVHcfWdLC4ZFwZiQuL74M+vZ+zFvNo6agqMC2g4=",
       "url": "_framework\/System.Threading.ThreadPool.dll"
     },
@@ -377,7 +381,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-roOHJLhkS8tJC28xJj2BCkZAaDV+Pqe3BqXyc4hlJww=",
+      "hash": "sha256-orP55bz1\/1ESqYUv2sN1WEPv9rvDkk+x8UpKyLdSRdA=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -385,5 +389,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "mn6As55d"
+  "version": "8EL7c9kh"
 };

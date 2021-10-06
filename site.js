@@ -11,9 +11,27 @@ function TriggerOnChange(input) {
     $(input)[0].focus();
 }
 
-function showSelectCell(cellId, value) {
+function showCell(cellId, value, color, eraseValue) {
     let btn = document.getElementById(cellId);
     console.log(btn);
-    btn.style.background = "yellow";
-    btn.innerHTML = value;
+    btn.style.background = color;
+    if (eraseValue) {
+        btn.innerHTML = '';
+        btn.click = function () {
+            return false;
+        };
+    }
+    else {
+        btn.innerHTML = value;
+    }
+}
+
+function _sleep(delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+}
+
+function showSelectCell(cellId, value, color, eraseValue, sleep = false) {
+    console.log(sleep);
+    showCell(cellId, value, color, eraseValue);    
 }
