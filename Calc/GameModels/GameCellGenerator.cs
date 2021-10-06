@@ -19,7 +19,7 @@ namespace Calc.GameModels
             HashSet<int> cardValues = new();
             do
             {
-                cardValues.Add( rand.Next( 1, 20 ) );
+                cardValues.Add( rand.Next( 1, size ) );
             }
             while( cardValues.Count < numCount );
             var values = new List<int>();

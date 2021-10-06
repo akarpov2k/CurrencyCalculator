@@ -45,7 +45,15 @@ else
     {
         var temp = new Coord { X = x, Y = y };
         if( GameField.Field[temp.X][temp.Y].IsOpen ) return;
-        if( ClickCount == 0 )
+        if( ClickCount == 2 )
+        {
+            await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, "white", true } );
+            await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, "white", true } );
+            GameField.Field[FirstCard.X][FirstCard.Y].IsOpen = false;
+            GameField.Field[SecondCard.X][SecondCard.Y].IsOpen = false;
+            ClickCount = 0;
+        }
+        if( ClickCount == 0  )
         {
             FirstCard = temp;
             ClickCount++;
@@ -68,15 +76,12 @@ else
                 {
                     congrat = true;
                 }
+                ClickCount = 0;
             }
             else
-            {                
-                await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, "white", true } );
-                await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, "white", true } );
-                GameField.Field[FirstCard.X][FirstCard.Y].IsOpen = false;
-                GameField.Field[SecondCard.X][SecondCard.Y].IsOpen = false;
+            {
+                ClickCount++;
             }
-            ClickCount = 0;
         }
     }
 
