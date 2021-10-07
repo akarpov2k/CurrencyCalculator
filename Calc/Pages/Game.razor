@@ -5,10 +5,7 @@
 <h3>Game</h3>
 @if( GameField != null )
 {
-    if( congrat )
-    {
-                    <h4>Поздравляем! Вы выиграли</h4>
-    }
+<span>Времени осталось: @TimeLeft.ToString( "hh\\:mm\\:ss" )</span>
     <table id="game_field">
         <tbody>
             @for( int i = 0; i < GameField.Field.Length; i++ )
@@ -30,69 +27,80 @@
 }
 else
 {
-    <h4>Loading...</h4>
+    if( GameEnd )
+    {
+        <h4>@EndText</h4>        
+        if( isWin )
+        {
+        <div>
+            <span>Вы завершили игру за @GameMoveCount ходов и затратили @winTime</span>
+        </div>
+        }
+    }
+    <div style="display: @displaySettings">
+        <h4>Выберите размер поля</h4>
+        <input type="number" step="4" min="4" max="256" onkeypress="return false;" @bind="fieldSize" />
+    </div>
+    <button @onclick="() => Init(fieldSize)">@ButtonText</button>
 }
 
 @code {
-    private byte ClickCount { get; set; }
-    private Coord FirstCard { get; set; }
-    private Coord SecondCard { get; set; }
-
-    private bool congrat = false;
+    
+    private string ButtonText { get; set; } = "Начать игру!";
+    private string displaySettings { get; set; } = "block";
+    private byte fieldSize = 4;
+    private string winTime;
+    private bool isWin = false;
 
 
     protected async Task ShowTd( int x, int y )
     {
+        TunrTimer.Enabled = false;
         var temp = new Coord { X = x, Y = y };
         if( GameField.Field[temp.X][temp.Y].IsOpen ) return;
         if( ClickCount == 2 )
         {
-            await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, "white", true } );
-            await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, "white", true } );
-            GameField.Field[FirstCard.X][FirstCard.Y].IsOpen = false;
-            GameField.Field[SecondCard.X][SecondCard.Y].IsOpen = false;
-            ClickCount = 0;
+            HideCards();
+            EraseCards();
         }
-        if( ClickCount == 0  )
+        if( ClickCount == 0 )
         {
-            FirstCard = temp;
             ClickCount++;
-            await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, "yellow", false } );
+            FirstCard = temp;
+            await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, SelectColor, false } );
             GameField.Field[FirstCard.X][FirstCard.Y].IsOpen = true;
+            GameMoveCount++;
         }
         else if( ClickCount == 1 )
         {
+            ClickCount++;
             SecondCard = temp;
-            Console.WriteLine( GameField.Field[FirstCard.X][FirstCard.Y].Value );
-            Console.WriteLine( GameField.Field[SecondCard.X][SecondCard.Y].Value );
-            await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, "yellow", false, true } );
+            await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, SelectColor, false, true } );
             if( GameField.Field[FirstCard.X][FirstCard.Y].Value == GameField.Field[SecondCard.X][SecondCard.Y].Value )
             {
-                await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, "green", false } );
-                await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, "green", false } );
+                await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, WinColor, false } );
+                await JS.InvokeVoidAsync( "showSelectCell", new object[] { SecondCard.GetCellPos(), GameField.Field[x][y].Value, WinColor, false } );
                 GameField.Field[FirstCard.X][FirstCard.Y].IsOpen = true;
                 GameField.Field[SecondCard.X][SecondCard.Y].IsOpen = true;
+                EraseCards();
                 if( GameField.IsWin() )
                 {
-                    congrat = true;
+                    GameWatch.Stop();
+                    GameEnd = true;
+                    ButtonText = "Начать заново";
+                    displaySettings = "none";
+                    GameField = null;
+                    winTime = GameWatch.Elapsed.ToString( "hh\\:mm\\:ss\\.ff" );
+                    EndText = "Поздравляю. Вы выиграли!";
+                    isWin = true;
+                    return;
                 }
-                ClickCount = 0;
             }
             else
             {
-                ClickCount++;
+                GameMoveCount++;
+                TunrTimer.Enabled = true;
             }
         }
-    }
-
-    protected void Delayy()
-    {
-        Thread.Sleep( 1500 );
-    }
-
-    protected override Task OnInitializedAsync()
-    {
-        Init();
-        return base.OnInitializedAsync();
     }
 }

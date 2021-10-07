@@ -13,7 +13,6 @@ function TriggerOnChange(input) {
 
 function showCell(cellId, value, color, eraseValue) {
     let btn = document.getElementById(cellId);
-    console.log(btn);
     btn.style.background = color;
     if (eraseValue) {
         btn.innerHTML = '';
@@ -31,7 +30,6 @@ function _sleep(delay) {
     while (new Date().getTime() < start + delay);
 }
 
-function showSelectCell(cellId, value, color, eraseValue, sleep = false) {
-    console.log(sleep);
+function showSelectCell(cellId, value, color, eraseValue) {
     showCell(cellId, value, color, eraseValue);    
 }
