@@ -32,7 +32,7 @@ namespace Calc.Pages
 
         protected TimeSpan TimeLeft { get; set; }
 
-        protected void Init(byte fieldSize)
+        protected void Init(int fieldSize)
         {
             GameField = GameCellGenerator.Generate( fieldSize );
             TunrTimer = new Timer( 900 );

@@ -48,7 +48,7 @@ else
     
     private string ButtonText { get; set; } = "Начать игру!";
     private string displaySettings { get; set; } = "block";
-    private byte fieldSize = 4;
+    private int fieldSize = 4;
     private string winTime;
     private bool isWin = false;
 
@@ -64,7 +64,7 @@ else
             EraseCards();
         }
         if( ClickCount == 0 )
-        {
+        {            
             ClickCount++;
             FirstCard = temp;
             await JS.InvokeVoidAsync( "showSelectCell", new object[] { FirstCard.GetCellPos(), GameField.Field[x][y].Value, SelectColor, false } );
